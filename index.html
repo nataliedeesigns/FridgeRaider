@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FridgeRaider</title>
+    <meta name="description" content="Tell FridgeRaider what's in your fridge and pantry and get tasty recipes you can cook right now, with no shopping." />
+    <meta name="theme-color" content="#e2553a" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>" />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="./" aria-label="FridgeRaider home">
+          <span class="brand-mark" aria-hidden="true">🧊</span>
+          <span class="brand-name">Fridge<span>Raider</span></span>
+        </a>
+        <p class="tagline">Cook something good with what you already have. No shopping.</p>
+      </div>
+    </header>
+
+    <main class="wrap layout">
+      <!-- ========== Your kitchen ========== -->
+      <section class="panel kitchen" aria-labelledby="kitchen-title">
+        <div class="panel-head">
+          <h2 id="kitchen-title">Your kitchen</h2>
+          <span class="count-pill" id="pantry-count">0</span>
+        </div>
+
+        <form class="add-form" id="add-form" autocomplete="off">
+          <label for="add-input" class="sr-only">Add ingredients</label>
+          <div class="combo">
+            <input
+              id="add-input"
+              type="text"
+              placeholder="eggs, leftover rice, half an onion…"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded="false"
+              aria-controls="suggest-list"
+            />
+            <button type="submit" class="btn btn-primary">Add</button>
+            <ul id="suggest-list" class="suggest" role="listbox" hidden></ul>
+          </div>
+          <p class="hint">Type one item or paste a whole list. Commas, “and” and new lines all work.</p>
+        </form>
+
+        <div id="unknown-box" class="unknown" hidden></div>
+
+        <div id="pantry-empty" class="pantry-empty" hidden>
+          <p>Nothing here yet. Add what you have, or</p>
+          <button type="button" class="btn btn-ghost" id="sample-btn">Try a sample fridge</button>
+        </div>
+
+        <div id="pantry" class="pantry" aria-live="polite"></div>
+
+        <p class="legend" id="pantry-legend" hidden>
+          <span class="legend-icon" aria-hidden="true">⏰</span> Tap the clock on anything you need to use up soon, and
+          recipes that use it will rise to the top.
+        </p>
+
+        <details class="quick" open>
+          <summary>Forgetting something? Quick add</summary>
+          <div id="quick-add" class="quick-grid"></div>
+        </details>
+
+        <div class="kitchen-foot">
+          <button type="button" class="btn btn-link" id="clear-btn">Clear kitchen</button>
+        </div>
+      </section>
+
+      <!-- ========== Results ========== -->
+      <section class="results" aria-labelledby="results-title" id="results">
+        <div class="results-head">
+          <h2 id="results-title">What you can make</h2>
+          <button type="button" class="btn btn-ghost" id="remix-btn" title="Try different ingredient combinations">
+            <span aria-hidden="true">🎲</span> Remix
+          </button>
+        </div>
+
+        <div class="filters" role="group" aria-label="Filters">
+          <div class="seg" id="meal-filter" role="radiogroup" aria-label="Meal">
+            <button type="button" role="radio" data-meal="any" aria-checked="true">Anything</button>
+            <button type="button" role="radio" data-meal="breakfast" aria-checked="false">Breakfast</button>
+            <button type="button" role="radio" data-meal="dinner" aria-checked="false">Lunch &amp; dinner</button>
+            <button type="button" role="radio" data-meal="snack" aria-checked="false">Snack</button>
+            <button type="button" role="radio" data-meal="dessert" aria-checked="false">Sweet</button>
+          </div>
+          <div class="selects">
+            <label>
+              <span class="sr-only">Diet</span>
+              <select id="diet-filter">
+                <option value="any">Any diet</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+              </select>
+            </label>
+            <label>
+              <span class="sr-only">Time</span>
+              <select id="time-filter">
+                <option value="0">Any time</option>
+                <option value="10">≤ 10 min</option>
+                <option value="20">≤ 20 min</option>
+                <option value="30">≤ 30 min</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <p class="results-summary" id="results-summary" aria-live="polite"></p>
+        <div id="ready-grid" class="grid"></div>
+
+        <div id="almost-wrap" class="almost" hidden>
+          <h3>One thing away <span class="muted">— check the back of the cupboard</span></h3>
+          <div id="almost-grid" class="grid grid-almost"></div>
+        </div>
+      </section>
+    </main>
+
+    <a href="#results" class="jump" id="jump-btn" hidden></a>
+
+    <!-- ========== Recipe dialog ========== -->
+    <dialog id="recipe-dialog" class="recipe-dialog" aria-labelledby="dlg-title">
+      <article>
+        <header class="dlg-head">
+          <span class="dlg-emoji" id="dlg-emoji" aria-hidden="true"></span>
+          <div>
+            <h2 id="dlg-title"></h2>
+            <p class="dlg-meta" id="dlg-meta"></p>
+          </div>
+          <button type="button" class="icon-btn dlg-close" id="dlg-close" aria-label="Close">✕</button>
+        </header>
+        <p class="dlg-blurb" id="dlg-blurb"></p>
+
+        <div class="dlg-body">
+          <section>
+            <h3>From your kitchen</h3>
+            <ul class="uses" id="dlg-uses"></ul>
+            <p class="basics">Plus salt &amp; pepper.</p>
+          </section>
+          <section>
+            <h3>Method</h3>
+            <ol class="steps" id="dlg-steps"></ol>
+            <p class="tip" id="dlg-tip"></p>
+          </section>
+        </div>
+
+        <section class="cooked" id="cooked-panel" hidden>
+          <h3>Nice! What did you use up?</h3>
+          <p class="muted">Uncheck anything you still have left.</p>
+          <div id="cooked-list" class="cooked-list"></div>
+          <div class="cooked-actions">
+            <button type="button" class="btn btn-primary" id="cooked-confirm">Update my kitchen</button>
+            <button type="button" class="btn btn-link" id="cooked-cancel">Cancel</button>
+          </div>
+        </section>
+
+        <footer class="dlg-foot" id="dlg-foot">
+          <button type="button" class="btn btn-ghost" id="dlg-remix"><span aria-hidden="true">🎲</span> Different combo</button>
+          <button type="button" class="btn btn-ghost" id="dlg-print"><span aria-hidden="true">🖨️</span> Print</button>
+          <button type="button" class="btn btn-primary" id="dlg-cooked">I cooked this</button>
+        </footer>
+      </article>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

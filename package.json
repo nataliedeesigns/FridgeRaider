@@ -1,0 +1,12 @@
+{
+  "name": "fridgeraider",
+  "version": "1.0.0",
+  "description": "Cook something tasty with what's already in your fridge and pantry — no shopping required.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/serve.js",
+    "test": "node --test"
+  },
+  "license": "MIT"
+}
