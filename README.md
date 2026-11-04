@@ -32,7 +32,7 @@ of different dishes.
 
 - **Type or paste anything.** "eggs, half an onion, leftover rice and 2 carrots"
   understands quantities, plurals, synonyms (courgette → zucchini, garbanzo → chickpeas)
-  and leftovers (leftover rice → cooked rice). Autocomplete covers ~170 ingredients and
+  and leftovers (leftover rice → cooked rice). Autocomplete covers ~160 ingredients and
   their synonyms. Unrecognised items can be added by picking what kind of thing they are.
 - **Ready to cook, nothing to buy.** Results only show recipes your kitchen can fully cover.
 - **⏰ Use it up.** Flag ingredients that are about to go off, and recipes that use them
