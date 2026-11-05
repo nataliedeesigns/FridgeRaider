@@ -53,7 +53,11 @@ No build step and no dependencies. Node 18+ is only needed for the dev server an
 ```bash
 npm start        # serves http://localhost:8080 (set PORT to change)
 npm test         # engine + data-integrity tests (node:test)
+npm run build    # bundle into one self-contained page: dist/fridgeraider.html
 ```
+
+The build output has no `<html>`/`<body>` wrapper and drops the Print button, because it's
+meant for hosts that add their own page skeleton and block printing (such as a claude.ai Artifact).
 
 Any static file server works too (e.g. `python3 -m http.server`). The app uses ES modules,
 so it has to be served rather than opened via `file://`.
